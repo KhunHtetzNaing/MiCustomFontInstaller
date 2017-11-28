@@ -120,8 +120,8 @@ public class Update {
     public void DownloadFiles() {
         progressDialog.setMessage("Checking...");
         progressDialog.show();
-        new DownloadFileFromURL().execute("https://github.com/KhunHtetzNaing/miMyanmarFont/releases/download/0/check.txt");
-        Log.d("Download","https://github.com/KhunHtetzNaing/miMyanmarFont/releases/download/0/check.txt");
+        new DownloadFileFromURL().execute("https://github.com/KhunHtetzNaing/MiCustomFontInstaller/releases/download/1.0/check.txt");
+        Log.d("Download","https://github.com/KhunHtetzNaing/MiCustomFontInstaller/releases/download/1.0/check.txt");
     }
 
     class DownloadFileFromURL extends AsyncTask<String, String, String> {
@@ -231,12 +231,10 @@ public class Update {
         builder.setPositiveButton("Play Store", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Intent apk = new Intent(Intent.ACTION_VIEW);
-                String nnn = nVersion;
-                nnn = nnn.replace(".", "_");
-                apk.setData(Uri.parse("http://bit.ly/MiMyanmarFont_" + nnn));
-                context.startActivity(apk);
                 showAD();
+                Intent apk = new Intent(Intent.ACTION_VIEW);
+                apk.setData(Uri.parse("http://bit.ly/MiCustomFontInstaller"));
+                context.startActivity(apk);
             }
         });
         builder.setNegativeButton("Direct APK", new DialogInterface.OnClickListener() {
@@ -274,8 +272,8 @@ public class Update {
 
     public void dlAPK() {
         createDir();
-        new DownloadAPKFromURL().execute("https://github.com/KhunHtetzNaing/miMyanmarFont/releases/download/0/MiMyanmarFont_v" + nVersion + ".apk");
-        Log.d("Download","https://github.com/KhunHtetzNaing/miMyanmarFont/releases/download/0/MiMyanmarFont_v" + nVersion + ".apk");
+        new DownloadAPKFromURL().execute("https://github.com/KhunHtetzNaing/MiCustomFontInstaller/releases/download/1.0/miCustomFontInstaller_v" + nVersion + ".apk");
+        Log.d("Download","https://github.com/KhunHtetzNaing/MiCustomFontInstaller/releases/download/1.0/miCustomFontInstaller_v" + nVersion + ".apk");
     }
 
     class DownloadAPKFromURL extends AsyncTask<String, String, String> {
