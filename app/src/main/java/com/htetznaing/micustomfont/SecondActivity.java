@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,10 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.snatik.storage.Storage;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SecondActivity extends AppCompatActivity implements View.OnClickListener {
     Button btnNext,btnSkip;
@@ -33,7 +38,6 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
     String old = "CustomFont";
     AdRequest adRequest;
     AdView banner;
-    InterstitialAd interstitialAd;
     static SecondActivity secondActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +54,6 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
 
         btnNext.setOnClickListener(this);
         btnSkip.setOnClickListener(this);
-        Storage storage = new Storage(this);
-        storage.deleteFile(getIvPath()+"/preview_lockscreen_0.jpg");
     }
 
 
@@ -59,54 +61,18 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
         adRequest = new AdRequest.Builder().build();
         banner = (AdView) findViewById(R.id.adView);
         banner.loadAd(adRequest);
-
-        interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId("ca-app-pub-2502552457553139/5632694812");
-        interstitialAd.loadAd(adRequest);
-
-        interstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                loadAD();
-            }
-
-            @Override
-            public void onAdFailedToLoad(int i) {
-                loadAD();
-            }
-
-            @Override
-            public void onAdOpened() {
-                loadAD();
-            }
-        });
-    }
-
-    public void loadAD(){
-        if (!interstitialAd.isLoaded()){
-            interstitialAd.loadAd(adRequest);
-        }
-    }
-
-    public void showAD(){
-        if (interstitialAd.isLoaded()){
-            interstitialAd.show();
-        }else{
-            interstitialAd.show();
-        }
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.btnSkip:;showAD();startActivity(new Intent(SecondActivity.this,ThirdActivity.class));btnSkip.setEnabled(false);break;
+            case R.id.btnSkip:;startActivity(new Intent(SecondActivity.this,ThirdActivity.class));btnSkip.setEnabled(false);break;
             case R.id.btnNext:
                 final String lol = editText.getText().toString();
                 if (lol.isEmpty()||lol.equals(null)){
                     Toast.makeText(this, "Please enter font name!", Toast.LENGTH_SHORT).show();
                 }else{
                     if (ivHave==true) {
-                        showAD();
                         writeEdit(lol);
                     }else{
                         AlertDialog.Builder b = new AlertDialog.Builder(this);
@@ -115,7 +81,6 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
                         b.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                showAD();
                                 writeEdit(lol);
                             }
                         });
@@ -191,8 +156,17 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if (requestCode == 071012 && resultCode == RESULT_OK) {
-            String ivpath = getRealPathFromURI(this,data.getData());
+        if (requestCode == 071012 && resultCode == RESULT_OK && data!=null) {
+            Uri uri = data.getData();
+
+            String filePath= null;
+            try {
+                filePath = new PathUtils().getPath(this,uri);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+            Log.d("ImagePath",filePath);
             String newIvPath = null;
 
             Storage storage = new Storage(this);
@@ -205,40 +179,13 @@ public class SecondActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             storage.deleteFile(newIvPath+"/preview_lockscreen_0.jpg");
-            storage.copy(ivpath,newIvPath+"/preview_lockscreen_0.jpg");
+            storage.copy(filePath,newIvPath+"/preview_lockscreen_0.jpg");
             File n = new File(newIvPath+"/preview_lockscreen_0.jpg");
             if (n.exists()==true){
                 ivPreview.setImageBitmap(BitmapFactory.decodeFile(newIvPath+"/preview_lockscreen_0.jpg"));
                 ivHave = true;
             }else {
                 Toast.makeText(this, "Something was wrong :(", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    public String getIvPath(){
-        String newIvPath = null;
-        File f = new File("/sdcard/Android/data/com.htetznaing.micustomfont/CustomFont/.data/preview/theme/");
-        File[] files = f.listFiles();
-        for (File inFile : files) {
-            if (inFile.isDirectory()) {
-                newIvPath = inFile.toString();
-            }
-        }
-        return newIvPath;
-    }
-
-    public String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
             }
         }
     }

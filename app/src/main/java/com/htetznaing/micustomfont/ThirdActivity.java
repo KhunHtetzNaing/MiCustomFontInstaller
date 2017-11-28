@@ -139,7 +139,7 @@ public class ThirdActivity extends AppCompatActivity {
         editSHA1();
 
         Fucker my = new Fucker();
-        boolean lol = my.zipFileAtPath("/sdcard/Android/data/com.htetznaing.micustomfont/CustomFont/.data/","/sdcard/Android/data/com.htetznaing.micustomfont/test.zip");
+        my.zipFileAtPath("/sdcard/Android/data/com.htetznaing.micustomfont/CustomFont/.data/","/sdcard/Android/data/com.htetznaing.micustomfont/test.zip");
         my.unZip("/sdcard/Android/data/com.htetznaing.micustomfont/test.zip","/sdcard/MIUI/theme/");
         goSet();
     }
@@ -230,22 +230,25 @@ public class ThirdActivity extends AppCompatActivity {
         storage.deleteDirectory(mainPath + "CustomFont");
         storage.deleteFile(mainPath +"1.zip");
         storage.deleteFile("/sdcard/Android/data/com.htetznaing.micustomfont/test.zip");
+
+
         try {
-            Toast.makeText(this, "Choose "+ttile+" > Apply", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Choose " + ttile + " > Apply", Toast.LENGTH_LONG).show();
             Intent localIntent = new Intent(Intent.ACTION_MAIN);
             localIntent.setComponent(new ComponentName("com.android.thememanager", "com.android.thememanager.activity.ThemeSettingsActivity"));
             startActivity(localIntent);
+
         } catch (Exception e) {
-            Toast.makeText(this, "Choose System font > "+ttile+" > Apply", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Choose System font > " + ttile + " > Apply", Toast.LENGTH_LONG).show();
             Intent localIntent = new Intent(Intent.ACTION_MAIN);
             localIntent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$FontSettingsActivity"));
             startActivity(localIntent);
         }
+
         showAD();
         SecondActivity.getInstance().finish();
         finish();
     }
-
     public void startInstall(View view) {
         goWork();
     }

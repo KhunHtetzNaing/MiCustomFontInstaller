@@ -1,6 +1,8 @@
 package com.htetznaing.micustomfont;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        checkPermissions();
         setAD();
         btnChoose = (Button) findViewById(R.id.btnChoose);
         btnChoose.setOnClickListener(this);
@@ -103,29 +106,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for (Uri uri: files) {
                 File file = Utils.getFileForUri(uri);
                 font = file.toString();
+            }
 
-                if (font.endsWith(".ttf") || font.endsWith(".mtz")) {
+            if (font.endsWith(".ttf") || font.endsWith(".mtz")) {
 
-                    if (font.endsWith(".ttf")) {
-                        Log.d("FileType",".ttf");
-                        if (createDir() == true) {
+                if (font.endsWith(".ttf")) {
+                    Log.d("FileType",".ttf");
+                    if (createDir() == true) {
+                        install();
+                    }
+                }
+
+                if (font.endsWith(".mtz")){
+                    Log.d("FileType",".mtz");
+                    if (createDir()==true){
+                        if(extractMTZ()==true) {
                             install();
                         }
                     }
-
-                    if (font.endsWith(".mtz")){
-                        Log.d("FileType",".mtz");
-                        if (createDir()==true){
-                            if(extractMTZ()==true) {
-                                install();
-                            }
-                        }
-                    }
-
-                }else{
-                    Toast.makeText(this, "Please choose .ttf or .mtz files only :)", Toast.LENGTH_SHORT).show();
                 }
+
+            }else{
+                Toast.makeText(this, "Please choose .ttf or .mtz files only :)", Toast.LENGTH_SHORT).show();
             }
+
         }
     }
 
@@ -155,11 +159,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void install() {
-//        sharedPreferences = getSharedPreferences("Htetz",MODE_PRIVATE);
-//        int check = sharedPreferences.getInt("check",1);
+
         String fileLol = "1.zip";
-        Log.d("Zip Name",fileLol);
+        Log.d("ZipName",fileLol);
         Storage storage = new Storage(this);
+
+        storage.deleteDirectory(mainPath+"CustomFont");
+        storage.deleteFile(fileLol);
         Fucker my = new Fucker();
         my.assets2SD(this,fileLol,mainPath,fileLol);
         my.unZip(mainPath + fileLol, mainPath + "CustomFont");
@@ -170,6 +176,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (storage.isFileExist(fontPath+".data/content/fonts/"+Htetz)==true){
             startActivity(new Intent(MainActivity.this,SecondActivity.class));
+        }else{
+
         }
         storage.deleteDirectory(mainPath+"mtz");
     }
@@ -222,5 +230,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void help(View view) {
         showAD();
         startActivity(new Intent(MainActivity.this,Help.class));
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Attention!");
+        builder.setMessage("Do you want to Exit ?");
+        builder.setIcon(R.drawable.icon);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showAD();
+                finish();
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showAD();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

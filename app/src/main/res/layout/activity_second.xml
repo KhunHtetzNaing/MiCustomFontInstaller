@@ -8,10 +8,11 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.htetznaing.mifontinstaller.SecondActivity">
+    tools:context="com.htetznaing.micustomfont.SecondActivity">
 
 
     <LinearLayout
+        android:id="@+id/l1"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -82,12 +83,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/ivPreview"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
         </LinearLayout>
 
     <com.google.android.gms.ads.AdView
@@ -99,4 +94,12 @@
         ads:adSize="BANNER"
         ads:adUnitId="ca-app-pub-2502552457553139/4894328218">
     </com.google.android.gms.ads.AdView>
+
+    <ImageView
+        android:layout_above="@id/adView"
+        android:layout_below="@id/l1"
+        android:id="@+id/ivPreview"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>
