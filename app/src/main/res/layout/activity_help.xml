@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_help"
+    android:layout_width="match_parent"
+    android:paddingTop="10dp"
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp"
+    android:layout_height="match_parent"
+    tools:context="com.htetznaing.mifontinstaller.Help">
+
+        <TextView
+            android:id="@+id/tv"
+            android:textColor="#000"
+            android:text="If you have any problem with this app,\nplease send me your problem."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adUnitId="ca-app-pub-2502552457553139/4894328218">
+    </com.google.android.gms.ads.AdView>
+
+
+
+         <ImageButton
+             android:layout_marginBottom="5dp"
+             android:layout_above="@id/adView"
+             android:onClick="Send"
+             android:layout_marginTop="10dp"
+             android:background="@drawable/sendbg"
+             android:layout_alignParentRight="true"
+             android:src="@drawable/send"
+             android:id="@+id/btnSend"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/edText"
+            android:layout_below="@id/tv"
+            android:layout_above="@id/btnSend"
+            android:padding="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/editbg"
+            android:gravity="start"
+            android:hint="Enter your message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+</RelativeLayout>
